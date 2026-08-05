@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SkyFlow Weather — live weather, forecasts, air quality, favorites and location-based conditions.">
+    <title>SkyFlow Weather</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-sunny">
+    <div id="offline-banner" class="offline-banner hidden" role="status">
+        <i class="fa-solid fa-wifi-slash"></i> You are offline. Check your internet connection.
+    </div>
+
+    <div id="loader" class="loader-overlay hidden" role="status" aria-live="polite">
+        <div class="spinner"></div>
+        <p>Fetching weather...</p>
+    </div>
+
+    <div id="error-modal" class="error-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="error-title">
+        <div class="glass-card error-card">
+            <i class="fa-solid fa-cloud-bolt error-icon"></i>
+            <h2 id="error-title">Oops!</h2>
+            <p id="error-message">Could not load weather.</p>
+            <button id="retry-btn" class="glass-btn primary-btn" type="button">Try Again</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <aside class="sidebar glass-card">
+            <div class="sidebar-header">
+                <h2>SkyFlow</h2>
+                <div class="controls">
+                    <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme" aria-label="Toggle theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button id="unit-toggle" class="icon-btn" type="button" title="Toggle temperature units" aria-label="Toggle temperature units">°C</button>
+                </div>
+            </div>
+
+            <form id="search-form" class="search-box glass-input-container" autocomplete="off">
+                <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+                <input type="search" id="search-input" placeholder="Search city..." aria-label="Search city" required>
+                <button id="search-btn" class="icon-btn search-submit" type="submit" title="Search" aria-label="Search">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                <button id="geo-btn" class="icon-btn" type="button" title="Use current location" aria-label="Use current location">
+                    <i class="fa-solid fa-location-crosshairs"></i>
+                </button>
+            </form>
+
+            <div class="lists-container">
+                <div class="list-section">
+                    <h3><i class="fa-solid fa-star"></i> Favorites</h3>
+                    <ul id="favorites-list" class="city-list"></ul>
+                </div>
+
+                <div class="list-section">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> Recent Searches</h3>
+                    <ul id="recent-list" class="city-list"></ul>
+                </div>
+            </div>
+        </aside>
+
+        <main class="dashboard">
+            <header class="top-bar">
+                <div class="location-info">
+                    <h1 id="city-name">Loading...</h1>
+                    <span id="country-badge" class="badge">--</span>
+                    <button id="fav-btn" class="icon-btn fav-toggle" type="button" title="Add to favorites" aria-label="Add to favorites">
+                        <i class="fa-regular fa-star"></i>
+                    </button>
+                </div>
+                <div class="datetime-info">
+                    <p id="current-date">--</p>
+                    <p id="current-time">--</p>
+                </div>
+            </header>
+
+            <div class="weather-layout">
+                <section class="hero-card glass-card floating" aria-label="Current weather">
+                    <div class="weather-main">
+                        <img id="weather-icon" src="" alt="Current weather" class="main-icon hidden">
+                        <div class="temp-container">
+                            <h1 id="current-temp">--°</h1>
+                            <p id="weather-desc" class="desc">--</p>
+                        </div>
+                    </div>
+                    <div class="hero-details">
+                        <div class="hero-item">
+                            <i class="fa-solid fa-temperature-half"></i>
+                            <div>
+                                <span>Feels Like</span>
+                                <p id="feels-like">--°</p>
+                            </div>
+                        </div>
+                        <div class="hero-item">
+                            <i class="fa-solid fa-wind"></i>
+                            <div>
+                                <span>Wind</span>
+                                <p id="wind-speed">--</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="details-grid" aria-label="Weather details">
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-droplet"></i>
+                        <h4>Humidity</h4>
+                        <p id="humidity">--%</p>
+                    </div>
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-gauge-high"></i>
+                        <h4>Pressure</h4>
+                        <p id="pressure">-- hPa</p>
+                    </div>
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-eye"></i>
+                        <h4>Visibility</h4>
+                        <p id="visibility">-- km</p>
+                    </div>
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-leaf"></i>
+                        <h4>Air Quality</h4>
+                        <p id="aqi">--</p>
+                    </div>
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-sun"></i>
+                        <h4>Sunrise</h4>
+                        <p id="sunrise">--:--</p>
+                    </div>
+                    <div class="detail-card glass-card">
+                        <i class="fa-solid fa-moon"></i>
+                        <h4>Sunset</h4>
+                        <p id="sunset">--:--</p>
+                    </div>
+                </section>
+
+                <section class="hourly-section glass-card">
+                    <h3>Today's Forecast</h3>
+                    <div id="hourly-container" class="hourly-scroll"></div>
+                </section>
+
+                <section class="forecast-section glass-card">
+                    <h3>5-Day Forecast</h3>
+                    <div id="forecast-container" class="forecast-list"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
